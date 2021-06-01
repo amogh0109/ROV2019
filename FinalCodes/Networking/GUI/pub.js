@@ -10,16 +10,16 @@ if (args.indexOf("-h") != -1) {
 }
 
 //Initialisaitons for MQTT,ExpressJS and Socket.io
-var mqtt = require("mqtt");
-var express = require("express");
-var app = express();
+var mqtt = require("mqtt");      //import libraries in npm(node package management)
+var express = require("express");    //server
+var app = express();     //middleware 
 app.get("/", function (req, res) {
-	res.sendFile(__dirname + "/Client/index.html");
+	res.sendFile(__dirname + "/Client/index.html");      //html file on server
 });
-app.use("/Client", express.static(__dirname + "/Client"));
+app.use("/Client", express.static(__dirname + "/Client"));    // 
 
 var server = app.listen(8000, "localhost");
-var io = require("socket.io").listen(server);
+var io = require("socket.io").listen(server);       //import socket.io
 var client = mqtt.connect("mqtt://" + ip);
 
 //Socket.io client lifecycle events
@@ -84,7 +84,7 @@ var gripper4 = false;
 var gripper6 = false;
 
 //Mode switch booleans
-const ModeEnum = Object.freeze({ nav: 1, dof_4: 2, dof_6: 3 });
+const ModeEnum = Object.freeze({ nav: 1, dof_4: 2, dof_6: 3 });     //values cannot be changed
 //const HatState = Object.freeze({"ZERO":1.29, "UP":-1.00, "DOWN":0.14,"LEFT":0.71,"RIGHT":-0.43});
 var joyMode = undefined;
 
@@ -93,9 +93,9 @@ var joyMode = undefined;
  * example usage: map(30,-100,100,-255,255);
  */
 function map(value, range_min, range_max, out_range_min, out_range_max) {
-	var slope = (out_range_max - out_range_min) / (range_max - range_min);
+	var slope = (out_range_max - out_range_min) / (range_max - range_min);    
 	var newY = slope * (value - range_min) + out_range_min;
-	return newY;
+	return newY;          //mapping coordinates of arm
 }
 
 //Broadcast Events
@@ -115,7 +115,7 @@ io.on("connection", function (socket) {
 			socket.emit("ServerDetectedJoy", data);
 		} else {
 			var conn = controllers.find(function (value) {
-				return value == data;
+				return value == data;                 //data --> gamepad id
 			});
 			if (conn.length > 0) {
 				console.log("Gamepad with id: " + data + " already exists");
@@ -124,7 +124,7 @@ io.on("connection", function (socket) {
 				controllers.push(data);
 				socket.emit("ServerDetectedJoy", data);
 			}
-		}
+		} 
 		console.log("Gamepads connected: " + controllers);
 	});
 
@@ -132,7 +132,7 @@ io.on("connection", function (socket) {
 	socket.on("removeGamepad", function (data) {
 		console.log("in removeGamepad ");
 		controllers = controllers.filter(function (value) {
-			return value != data;
+			return value != data;                //remove val != id
 		});
 		if (controllers.length > 0) {
 			console.log("Gamepads connected: " + controllers);
